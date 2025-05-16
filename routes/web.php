@@ -16,3 +16,16 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->group(['prefix' => 'api'], function () use ($router) {
+    // Auth
+    $router->post('register', 'UserController@register');
+    $router->post('login', 'UserController@login');
+
+    // User Management
+    $router->get('user', 'UserController@index');
+    $router->get('user/{id}', 'UserController@show');
+    $router->put('user/{id}', 'UserController@update');
+    // $router->put('users/{id}/avatar', 'UserController@updateAvatar');
+    $router->delete('user/{id}', 'UserController@delete');
+});
