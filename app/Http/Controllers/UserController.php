@@ -25,7 +25,10 @@ class UserController extends Controller
         $data['password'] = Hash::make($data['password']);
 
         $user = User::create($data);
-        return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
+        return response()->json([
+            'status' => 1,
+            'message' => 'Registration successful'
+        ]);
     }
 
     function login(Request $request)
@@ -35,26 +38,22 @@ class UserController extends Controller
             'password' => 'required'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
         $user = User::where('email', $request->email)->first();
 
         // Cek jika user tidak ditemukan atau password salah
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
+                'status' => 0,
                 'message' => 'Invalid email or password'
-            ], 401);
+            ]);
         }
 
         // Jika berhasil login
         return response()->json([
+            'status' => 1,
             'message' => 'Login successful',
             'user' => [
+                'id' => $user->id,
                 'username' => $user->username,
                 'email' => $user->email,
                 'avatar' => $user->avatar,
@@ -64,14 +63,17 @@ class UserController extends Controller
                 'phone' => $user->phone,
                 'postal_code' => $user->postal_code
             ]
-        ], 200);
+        ]);
     }
 
     public function update(Request $request, $id)
     {
         $user = User::find($id);
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json([
+                'status' => 0,
+                'message' => 'User not found'
+            ]);
         }
 
         $this->validate($request, [
@@ -87,7 +89,21 @@ class UserController extends Controller
         ]);
 
         $user->update($request->all());
-        return response()->json(['message' => 'User updated successfully'], 200);
+        return response()->json([
+            'statuus' => 1,
+            'message' => 'User updated successfully',
+            'user' => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'email' => $user->email,
+                'avatar' => $user->avatar,
+                'address' => $user->address,
+                'city' => $user->city,
+                'province' => $user->province,
+                'phone' => $user->phone,
+                'postal_code' => $user->postal_code
+            ]
+        ]);
     }
 
     // public function updateAvatar(Request $request, $id)
@@ -99,7 +115,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json([
+                'status' => 0,
+                'message' => 'User not found'
+            ]);
         }
 
         // if ($user->avatar && file_exists($user->avatar)) {
@@ -107,22 +126,34 @@ class UserController extends Controller
         // }
 
         $user->delete();
-        return response()->json(['message' => 'User deleted successfully'], 200);
+        return response()->json([
+            'status' => 1,
+             'message' => 'User deleted successfully'
+        ]);
     }
 
     public function show($id)
     {
         $user = User::find($id);
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json([
+                'status' => 0,
+                'message' => 'User not found'
+            ]);
         }
 
-        return response()->json(['user' => $user], 200);
+        return response()->json([
+            'status' => 1,
+            'user' => $user]
+        );
     }
 
     public function index()
     {
-        $user = User::all();
-        return response()->json(['users' => $user], 200);
+        $users = User::all();
+        return response()->json([
+            'status' => 1,
+            'user' => $users
+        ]);
     }
 }
