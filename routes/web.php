@@ -28,4 +28,13 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->put('user/{id}', 'UserController@update');
     // $router->put('users/{id}/avatar', 'UserController@updateAvatar');
     $router->delete('user/{id}', 'UserController@delete');
+
+    // Product Management
+    $router->get('/products', 'ProductController@index');
+    $router->get('/products/{id}', 'ProductController@show');
+    // $router->post('/products', 'ProductController@store');
+    // $router->put('/products/{id}', 'ProductController@update');
+    // $router->delete('/products/{id}', 'ProductController@destroy');
+    $router->post('/products/view-count', 'ProductController@updateViewCount');
+    // $router->get('/products/{productId}/variants', 'ProductController@getVariants');
 });
