@@ -17,6 +17,20 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+// Add this before the api group
+$router->get('/storage/images/{filename}', function ($filename) {
+    $path = storage_path('app/public/images/' . $filename);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    $file = file_get_contents($path);
+    $type = mime_content_type($path);
+
+    return response($file, 200)->header('Content-Type', $type);
+});
+
 $router->group(['prefix' => 'api'], function () use ($router) {
     // Auth
     $router->post('register', 'UserController@register');

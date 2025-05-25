@@ -12,9 +12,16 @@ class ProductImage extends Model
         'image_order'
     ];
 
+    protected $appends = ['image_url'];
+
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return env('APP_URL') . '/storage/images/' . $this->image_path;
     }
 
     protected $casts = [

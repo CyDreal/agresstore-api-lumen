@@ -10,10 +10,11 @@ class ProductController extends Controller
 {
     public function index()
     {
-        // Fetch all products with their images
         $products = Product::with('images')->get();
-
-        return response()->json(['status' => 1, 'products' => $products]);
+        return response()->json([
+            'status' => 1,
+            'products' => $products
+        ]);
     }
 
     public function show($id)
