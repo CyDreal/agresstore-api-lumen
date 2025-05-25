@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('product_name');
             $table->text('description')->nullable();
             $table->string('category')->nullable();
-            $table->decimal('price', 10, 2);
+            $table->decimal('price');
             // $table->decimal('discount', 10, 2)->default(0);
             $table->integer('stock');
             $table->integer('weight')->default(0);
