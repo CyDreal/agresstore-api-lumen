@@ -40,7 +40,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('user', 'UserController@index');
     $router->get('user/{id}', 'UserController@show');
     $router->put('user/{id}', 'UserController@update');
-    // $router->put('users/{id}/avatar', 'UserController@updateAvatar');
+    $router->put('users/{id}/avatar', 'UserController@updateAvatar');
     $router->delete('user/{id}', 'UserController@delete');
 
     // Product Management
@@ -51,4 +51,28 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     // $router->delete('/products/{id}', 'ProductController@destroy');
     $router->post('/products/view-count', 'ProductController@updateViewCount');
     // $router->get('/products/{productId}/variants', 'ProductController@getVariants');
+
+    // Cart Management
+    $router->get('carts', 'CartController@index');
+    $router->post('carts', 'CartController@store');
+    $router->put('carts/{id}', 'CartController@update');
+    $router->delete('carts/{id}', 'CartController@destroy');
+
+    // Shipping Routes
+    $router->get('provinces', 'ShippingAddressController@getProvinces');
+    $router->get('cities', 'ShippingAddressController@getCities');
+    $router->post('shipping/calculate', 'ShippingAddressController@calculateShipping');
+    $router->post('shipping/address', 'ShippingAddressController@store');
+    $router->get('shipping/address/{userId}', 'ShippingAddressController@getUserAddresses');
+
+    // Order Routes
+    $router->get('orders', 'OrderController@index');
+    $router->get('orders/{id}', 'OrderController@show');
+    $router->post('orders', 'OrderController@store');
+    $router->put('orders/{id}/status', 'OrderController@updateStatus');
+    $router->get('user/{userId}/orders', 'OrderController@getUserOrders');
+
+    // Midtrans Routes
+    $router->get('payments/{orderId}/token', 'MidtransController@getPaymentToken');
+    $router->post('payments/webhook', 'MidtransController@handleWebhook');
 });

@@ -106,10 +106,62 @@ class UserController extends Controller
         ]);
     }
 
-    // public function updateAvatar(Request $request, $id)
-    // {
-    //
-    // }
+    public function updateAvatar(Request $request, $id)
+    {
+        $this->validate($request, [
+            'avatar' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        if ($request->hasFile('avatar')) {
+            $image = $request->file('avatar');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+
+            // Delete old avatar if exists
+            if ($user->avatar) {
+                $oldPath = storage_path('app/public/images/' . basename($user->avatar));
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            // Upload new avatar
+            $image->move(storage_path('app/public/images'), $imageName);
+
+            // Update avatar path in database
+            $user->update([
+                'avatar' => env('APP_URL') . '/storage/images/' . $imageName
+            ]);
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Avatar updated successfully',
+                'user' => [
+                    'id' => $user->id,
+                    'username' => $user->username,
+                    'email' => $user->email,
+                    'avatar' => $user->avatar,
+                    'address' => $user->address,
+                    'city' => $user->city,
+                    'province' => $user->province,
+                    'phone' => $user->phone,
+                    'postal_code' => $user->postal_code
+                ]
+            ]);
+        }
+
+        return response()->json([
+            'status' => 0,
+            'message' => 'No image uploaded'
+        ], 400);
+    }
 
     public function delete($id)
     {
