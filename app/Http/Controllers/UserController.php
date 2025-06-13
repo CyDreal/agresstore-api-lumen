@@ -180,7 +180,7 @@ class UserController extends Controller
         $user->delete();
         return response()->json([
             'status' => 1,
-             'message' => 'User deleted successfully'
+            'message' => 'User deleted successfully'
         ]);
     }
 
@@ -194,9 +194,11 @@ class UserController extends Controller
             ]);
         }
 
-        return response()->json([
-            'status' => 1,
-            'user' => $user]
+        return response()->json(
+            [
+                'status' => 1,
+                'user' => $user
+            ]
         );
     }
 
@@ -207,5 +209,41 @@ class UserController extends Controller
             'status' => 1,
             'user' => $users
         ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $this->validate($request, [
+            'user_id' => 'required|exists:users_elsid,id',
+            'old_password' => 'required',
+            'new_password' => 'required|min:6',
+            'confirm_password' => 'required|same:new_password'
+        ]);
+
+        try {
+            $user = User::find($request->user_id);
+
+            // Verifikasi password lama
+            if (!Hash::check($request->old_password, $user->password)) {
+                return response()->json([
+                    'status' => 0,
+                    'message' => 'Invalid Password'
+                ], 400);
+            }
+
+            // Update password baru
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+
+            return response()->json([
+                'status' => 1,
+                'message' => 'Password updated successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Change Password Failed: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

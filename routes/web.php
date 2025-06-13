@@ -42,6 +42,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->put('user/{id}', 'UserController@update');
     $router->post('users/{id}/avatar', 'UserController@updateAvatar');
     $router->delete('user/{id}', 'UserController@delete');
+    $router->post('user/reset-password', 'UserController@resetPassword');
 
     // Product Management
     $router->get('/products', 'ProductController@index');
