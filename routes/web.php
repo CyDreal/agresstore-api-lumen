@@ -40,7 +40,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('user', 'UserController@index');
     $router->get('user/{id}', 'UserController@show');
     $router->put('user/{id}', 'UserController@update');
-    $router->put('users/{id}/avatar', 'UserController@updateAvatar');
+    $router->post('users/{id}/avatar', 'UserController@updateAvatar');
     $router->delete('user/{id}', 'UserController@delete');
 
     // Product Management
