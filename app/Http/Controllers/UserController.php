@@ -214,7 +214,7 @@ class UserController extends Controller
     public function resetPassword(Request $request)
     {
         $this->validate($request, [
-            'user_id' => 'required|exists:users_elsid,id',
+            'user_id' => 'required|exists:users,id',
             'old_password' => 'required',
             'new_password' => 'required|min:6',
             'confirm_password' => 'required|same:new_password'
@@ -223,17 +223,18 @@ class UserController extends Controller
         try {
             $user = User::find($request->user_id);
 
-            // Verifikasi password lama
+            // Check old password
             if (!Hash::check($request->old_password, $user->password)) {
                 return response()->json([
                     'status' => 0,
-                    'message' => 'Invalid Password'
+                    'message' => 'Current password is incorrect'
                 ], 400);
             }
 
-            // Update password baru
-            $user->password = Hash::make($request->new_password);
-            $user->save();
+            // Update to new password
+            $user->update([
+                'password' => Hash::make($request->new_password)
+            ]);
 
             return response()->json([
                 'status' => 1,
@@ -242,7 +243,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 0,
-                'message' => 'Change Password Failed: ' . $e->getMessage()
+                'message' => 'Failed to update password: ' . $e->getMessage()
             ], 500);
         }
     }
