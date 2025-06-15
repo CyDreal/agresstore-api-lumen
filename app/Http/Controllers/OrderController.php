@@ -51,7 +51,7 @@ class OrderController extends Controller
             'courier' => 'required',
             'service' => 'required',
             'total_price' => 'required|numeric|min:0',
-            'etd_days' => 'required|integer|min:1',
+            'etd_days' => 'required',
             'status' => 'required|in:pending,processing,shipped,delivered,cancelled'
         ]);
 
