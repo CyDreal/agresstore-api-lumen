@@ -59,8 +59,7 @@ class ShippingAddressController extends Controller
                 'origin' => 'required',
                 'destination' => 'required',
                 'weight' => 'required|integer|min:1',
-                'courier' => 'required|in:jne,tiki,pos',
-                'order_id' => 'required|exists:orders,id'
+                'courier' => 'required|in:jne,tiki,pos'
             ]);
 
             $response = $this->client->request('POST', $this->baseUrl . 'cost', [
@@ -73,31 +72,7 @@ class ShippingAddressController extends Controller
                 ]
             ]);
 
-            $result = json_decode($response->getBody()->getContents(), true);
-
-            if (isset($result['rajaongkir']['results'][0]['costs'])) {
-                $costs = $result['rajaongkir']['results'][0]['costs'];
-                foreach ($costs as &$service) {
-                    // Convert etd to integer days
-                    $etd = str_replace(' HARI', '', $service['cost'][0]['etd']);
-                    $etd = (int) str_replace('-', '', $etd); // Handle ranges like "2-3"
-                    $service['etd_days'] = $etd;
-
-                    // Save shipping tracking info
-                    ShippingTracking::updateOrCreate(
-                        ['order_id' => $request->order_id],
-                        [
-                            'courier' => $request->courier,
-                            'service' => $service['service'],
-                            'etd_days' => $etd,
-                            'status' => 'pending'
-                        ]
-                    );
-                }
-                $result['rajaongkir']['results'][0]['costs'] = $costs;
-            }
-
-            return response()->json($result);
+            return response()->json(json_decode($response->getBody()->getContents(), true));
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
