@@ -42,6 +42,7 @@ class OrderController extends Controller
         $this->validate($request, [
             'user_id' => 'required|exists:users,id',
             'payment_method' => 'required|in:cod,midtrans',
+            'payment_status' => 'required|in:unpain,paid,expired,failed',
             'shipping_address' => 'required',
             'shipping_city' => 'required',
             'shipping_province' => 'required',
