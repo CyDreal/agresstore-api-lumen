@@ -45,12 +45,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('user/reset-password', 'UserController@resetPassword');
 
     // Product Management
-    $router->get('/products', 'ProductController@index');
-    $router->get('/products/{id}', 'ProductController@show');
+    $router->get('products', 'ProductController@index');
+    $router->get('products/{id}', 'ProductController@show');
     // $router->post('/products', 'ProductController@store');
     // $router->put('/products/{id}', 'ProductController@update');
     // $router->delete('/products/{id}', 'ProductController@destroy');
-    $router->post('/products/view-count', 'ProductController@updateViewCount');
+    $router->post('products/view-count', 'ProductController@updateViewCount');
     // $router->get('/products/{productId}/variants', 'ProductController@getVariants');
 
     // Cart Management
@@ -58,11 +58,13 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('carts', 'CartController@store');
     $router->put('carts/{id}', 'CartController@update');
     $router->delete('carts/{id}', 'CartController@destroy');
+    $router->delete('carts/user/{user_id}', 'CartController@clearUserCart');
+
 
     // Shipping Routes
     $router->get('provinces', 'ShippingAddressController@getProvinces');
     $router->get('cities', 'ShippingAddressController@getCities');
-    $router->get('/shipping/couriers', 'ShippingAddressController@getCouriers');
+    $router->get('shipping/couriers', 'ShippingAddressController@getCouriers');
     $router->post('shipping/calculate', 'ShippingAddressController@calculateShipping');
     $router->post('shipping/address', 'ShippingAddressController@store');
     $router->get('shipping/address/{userId}', 'ShippingAddressController@getUserAddresses');
