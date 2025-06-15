@@ -58,8 +58,6 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('carts', 'CartController@store');
     $router->put('carts/{id}', 'CartController@update');
     $router->delete('carts/{id}', 'CartController@destroy');
-    $router->delete('carts/user/{user_id}', 'CartController@clearUserCart');
-
 
     // Shipping Routes
     $router->get('provinces', 'ShippingAddressController@getProvinces');

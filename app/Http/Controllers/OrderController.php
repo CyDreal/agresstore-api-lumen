@@ -48,7 +48,10 @@ class OrderController extends Controller
             'shipping_postal_code' => 'required',
             'shipping_cost' => 'required|numeric',
             'courier' => 'required',
-            'service' => 'required'
+            'service' => 'required',
+            'total_price' => 'required|numeric|min:0',
+            'etd_days' => 'required|integer|min:1',
+            'status' => 'required|in:pending,processing,shipped,delivered,cancelled'
         ]);
 
         // Get cart items
@@ -96,7 +99,7 @@ class OrderController extends Controller
             ]);
         }
 
-        // Clear cart
+        // Clear cart after successful order creation
         Cart::where('user_id', $request->user_id)->delete();
 
         // Load relationships

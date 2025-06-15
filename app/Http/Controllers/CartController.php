@@ -125,28 +125,4 @@ class CartController extends Controller
             'message' => 'Cart item removed'
         ]);
     }
-
-    // Add this method to your CartController class
-    public function clearUserCart($user_id)
-    {
-        try {
-            // Check if user exists
-            if (!Cart::where('user_id', $user_id)->exists()) {
-                return response()->json([
-                    'error' => 'No cart items found for this user'
-                ], 404);
-            }
-
-            Cart::where('user_id', $user_id)->delete();
-
-            return response()->json([
-                'status' => 1,
-                'message' => 'Cart cleared successfully'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
 }
