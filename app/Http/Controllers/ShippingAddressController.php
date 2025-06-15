@@ -142,4 +142,35 @@ class ShippingAddressController extends Controller
             'addresses' => $addresses
         ]);
     }
+
+    public function getCouriers()
+    {
+        try {
+            $couriers = [
+                [
+                    'code' => 'jne',
+                    'name' => 'Jalur Nugraha Ekakurir (JNE)',
+                ],
+                [
+                    'code' => 'tiki',
+                    'name' => 'Titipan Kilat (TIKI)',
+                ],
+                [
+                    'code' => 'pos',
+                    'name' => 'POS Indonesia',
+                ]
+            ];
+
+            return response()->json([
+                'status' => 1,
+                'origin' => env('RAJAONGKIR_ORIGIN_ID'),
+                'couriers' => $couriers
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 0,
+                'message' => 'Failed to fetch couriers: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

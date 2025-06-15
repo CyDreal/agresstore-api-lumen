@@ -62,6 +62,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     // Shipping Routes
     $router->get('provinces', 'ShippingAddressController@getProvinces');
     $router->get('cities', 'ShippingAddressController@getCities');
+    $router->get('/shipping/couriers', 'ShippingAddressController@getCouriers');
     $router->post('shipping/calculate', 'ShippingAddressController@calculateShipping');
     $router->post('shipping/address', 'ShippingAddressController@store');
     $router->get('shipping/address/{userId}', 'ShippingAddressController@getUserAddresses');
